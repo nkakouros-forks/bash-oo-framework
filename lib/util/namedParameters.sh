@@ -1,8 +1,10 @@
+#TODO implement readonly
+#TODO document readoly, required, handleless
+
 namespace oo/type
 import util/variable
 
 # depends on modules: variable, exception
-
 declare -g ref=D10F7FB728364261BB50A7E818D537C4
 declare -g var=A04FB7D7594E479B8CD8D90C5014E37A
 
@@ -67,6 +69,7 @@ Variable::TrapAssignNumberedParameter() {
 
     local indirectAccess="$__assign_paramNo"
 
+    # When is this entered
     if [[ "${!indirectAccess}" == "$var:"* ]]
     then
       local realVarName="${!indirectAccess#*$var:}"
@@ -209,7 +212,10 @@ Variable::InTrapCaptureParameters() {
 
 ## ARGUMENT RESOLVERS ##
 
+# TODO add check if argument name is given, eg [string] ''?
 # NOTE: true; true; at the end is required to workaround an edge case where TRAP doesn't behave properly
+# why [[ \$__assign_normalCodeStarted -ge 2 ]]? not 1?
+# why two trues instead of 1?
 alias Variable::TrapAssign='Variable::InTrapCaptureParameters; local -i __assign_normalCodeStarted=0; trap "declare -i __assign_paramNo; Variable::TrapAssignNumberedParameter \"\$BASH_COMMAND\" \"\$@\"; [[ \$__assign_normalCodeStarted -ge 2 ]] && trap - DEBUG && unset __assign_varType __assign_varName __assign_varValue __assign_paramNo __assign_valueRequired __assign_valueReadOnly __assign_noHandle" DEBUG; true; true; '
 alias [reference]='_type=reference Variable::TrapAssign local -n'
 alias Variable::TrapAssignLocal='Variable::TrapAssign local ${__assign_parameters}'

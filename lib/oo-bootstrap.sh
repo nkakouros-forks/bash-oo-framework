@@ -81,6 +81,7 @@ System::ImportOne() {
   {
     local localPath="$( cd "${BASH_SOURCE[1]%/*}" && pwd )"
     localPath="${localPath}/${libPath}"
+    # What is the purpose of the $@?
     System::SourcePath "${localPath}" "$@"
   } || \
   System::SourcePath "${requestedPath}" "$@" || \
@@ -120,9 +121,6 @@ System::SourceFile() {
   local libPath="$1"
   shift
 
-  # DEBUG subject=level3 Log "Trying to load from: ${libPath}"
-  [[ ! -f "$libPath" ]] && return 1 # && e="Cannot import $libPath" throw
-
   libPath="$(File::GetAbsolutePath "$libPath")"
 
   # echo "importing $libPath"
@@ -145,8 +143,8 @@ System::SourceFile() {
     # eval "$(<"$libPath")"
 
   else
-    :
     # DEBUG subject=level2 Log "File doesn't exist when importing: $libPath"
+    return 1 # && e="Cannot import $libPath" throw
   fi
 }
 
