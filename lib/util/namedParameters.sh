@@ -143,7 +143,7 @@ Variable::TrapAssignNumberedParameter() {
         fi
       ;;
       *) # 'array'|'map'|objects
-        if [[ ! -z "${!indirectAccess}" ]]
+        if [[ ! -z "${!indirectAccess-}" ]]
         then
           eval "local -$(Variable::GetDeclarationFlagFromType '$__assign_varType') tempMap=\"\$$indirectAccess\""
           local index

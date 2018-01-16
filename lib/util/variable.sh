@@ -17,7 +17,7 @@ Variable::GetDeclarationFlagFromType() {
   DEBUG subject="GetParamFromType" Log 'getting param from type' "$@"
 
   local typeInfo="$1"
-  local fallback="$2"
+  local fallback="${2:-A}"
 
   if [[ "$typeInfo" == "map" ]] || Function::Exists "class:${typeInfo}"
   then
@@ -40,7 +40,7 @@ Variable::GetDeclarationFlagFromType() {
         echo ai
       ;;
       *)
-        echo "${fallback:-A}"
+        echo "${fallback}"
       ;;
     esac
   fi
