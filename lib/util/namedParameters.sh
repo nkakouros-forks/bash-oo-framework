@@ -17,7 +17,7 @@ Variable::TrapAssignNumberedParameter() {
   shift
   #  Log "TRAP: ${commandWithArgs[@]}"
 
-  if [[ "$command" == "trap" || "$command" == "l="* || "$command" == "_type="* || "$command" == "_isRequired="* || "$command" == "_isReadOnly="*  || "$command" == "_noHandle="* || "$command" == "_isGlobal="* ]]
+  if [[ "$command" == "trap" || "$command" == "l="* || "$command" == "_type="* || "$command" == "_isRequired="* || "$command" == "_isReadOnly="*  || "$command" == "_noHandle="* || "$command" == "_isGlobal="* || "$command" == "_isExport="* ]]
   then
     return 0
   fi
