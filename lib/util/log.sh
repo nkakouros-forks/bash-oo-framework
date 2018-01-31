@@ -46,20 +46,20 @@ Log() {
     scope="${callingScript##*/}"
     scope="${scope%.*}"
   fi
-  local loggerList
+  local loggerList=''
   local loggers
   local logger
   local logged
 
   if [[ ! -z "$subject" ]]
   then
-    if [[ ! -z "${__oo__logScopeOutputs["$scope/$callingFunction/$subject"]}" ]]
+    if [[ ! -z "${__oo__logScopeOutputs["$scope/$callingFunction/$subject"]-}" ]]
     then
       loggerList="${__oo__logScopeOutputs["$scope/$callingFunction/$subject"]}"
-    elif [[ ! -z "${__oo__logScopeOutputs["$scope/$subject"]}" ]]
+    elif [[ ! -z "${__oo__logScopeOutputs["$scope/$subject"]-}" ]]
     then
       loggerList="${__oo__logScopeOutputs["$scope/$subject"]}"
-    elif [[ ! -z "${__oo__logScopeOutputs["$subject"]}" ]]
+    elif [[ ! -z "${__oo__logScopeOutputs["$subject"]-}" ]]
     then
       loggerList="${__oo__logScopeOutputs["$subject"]}"
     fi
@@ -72,7 +72,7 @@ Log() {
     done
   fi
 
-  if [[ ! -z "${__oo__logScopeOutputs["$scope/$callingFunction"]}" ]]
+  if [[ ! -z "${__oo__logScopeOutputs["$scope/$callingFunction"]-}" ]]
   then
     if [[ -z $logged ]] || [[ ${__oo__logDisabledFilter["$scope/$callingFunction"]} == true || ${__oo__logDisabledFilter["$scope"]} == true ]]
     then
@@ -86,7 +86,7 @@ Log() {
     fi
   fi
 
-  if [[ ! -z "${__oo__logScopeOutputs["$scope"]}" ]]
+  if [[ ! -z "${__oo__logScopeOutputs["$scope"]-}" ]]
   then
     if [[ -z $logged ]] || [[ ${__oo__logDisabledFilter["$scope"]} == true ]]
     then
