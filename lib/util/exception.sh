@@ -37,6 +37,11 @@ command_not_found_handle() {
 
   Exception::CustomCommandHandler "$@" && return 0 || true
 
+  local exit_code="${1-}"
+  if [[ "$#" -gt 0 ]]; then
+    shift
+  fi
+
   local script="${BASH_SOURCE[1]#./}"
   local lineNo="${BASH_LINENO[0]}"
   local undefinedObject="$*"
