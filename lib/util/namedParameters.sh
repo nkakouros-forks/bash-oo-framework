@@ -170,6 +170,13 @@ Variable::TrapAssignNumberedParameter() {
     fi
     unset __assign_valueGlobal
 
+    if [[ "$__assign_valueExport" == "true" ]]; then
+      local declaration="$(declare -p $__assign_varName)"
+      declaration="${declaration/declare/declare -x}"
+      eval "$declaration"
+    fi
+    unset __assign_valueExport
+
     if [[ "$__assign_noHandle" != 'true' && ! -z ${__oo__bootstrapped+x} ]] && declare -f 'Type::CreateHandlerFunction' &> /dev/null
     then
       DEBUG Log "Will create handle for $__assign_varName"
@@ -195,6 +202,7 @@ Variable::TrapAssignNumberedParameter() {
     __assign_valueRequired="$__capture_valueRequired"
     __assign_valueReadOnly="$__capture_valueReadOnly"
     __assign_valueGlobal="$__capture_valueGlobal"
+    __assign_valueExport="$__capture_valueExport"
     __assign_noHandle="$__capture_noHandle"
 
     DEBUG subject="parameters-pass" Log "PASS ${commandWithArgs[*]}"
@@ -213,13 +221,14 @@ Variable::InTrapCaptureParameters() {
   __capture_valueRequired="${_isRequired-false}"
   __capture_valueReadOnly="${_isReadOnly-false}"
   __capture_valueGlobal="${_isGlobal-false}"
+  __capture_valueExport="${_isExport-false}"
   __capture_noHandle="${_noHandle-false}"
 }
 
 ## ARGUMENT RESOLVERS ##
 
 # NOTE: true; true; at the end is required to workaround an edge case where TRAP doesn't behave properly
-alias Variable::TrapAssign='Variable::InTrapCaptureParameters; local -i __assign_normalCodeStarted=0; trap "declare -i __assign_paramNo; Variable::TrapAssignNumberedParameter \"\$BASH_COMMAND\" \"\$@\"; [[ \$__assign_normalCodeStarted -ge 2 ]] && trap - DEBUG && unset __assign_varType __assign_varName __assign_varValue __assign_paramNo __assign_valueRequired __assign_valueReadOnly __assign_valueGlobal __assign_noHandle" DEBUG; true; true; '
+alias Variable::TrapAssign='Variable::InTrapCaptureParameters; local -i __assign_normalCodeStarted=0; trap "declare -i __assign_paramNo; Variable::TrapAssignNumberedParameter \"\$BASH_COMMAND\" \"\$@\"; [[ \$__assign_normalCodeStarted -ge 2 ]] && trap - DEBUG && unset __assign_varType __assign_varName __assign_varValue __assign_paramNo __assign_valueRequired __assign_valueReadOnly __assign_valueGlobal __assign_valueExport __assign_noHandle" DEBUG; true; true; '
 alias [reference]='_type=reference Variable::TrapAssign local -n'
 alias Variable::TrapAssignLocal='Variable::TrapAssign local ${__assign_parameters}'
 alias [string]="_type=string Variable::TrapAssignLocal"
@@ -244,4 +253,5 @@ alias [...rest]='_type=rest Variable::TrapAssignLocal'
 alias @required='_isRequired=true'
 alias @handleless='_noHandle=true'
 alias @global='_isGlobal=true'
+alias @export='_isExport=true'
 # TODO: alias @readonly='_isReadOnly=true '
