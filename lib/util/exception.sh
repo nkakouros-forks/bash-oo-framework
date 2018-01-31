@@ -10,7 +10,7 @@ set -o errtrace  # trace ERR through 'time command' and other functions
 
 # unalias throw 2> /dev/null || true
 unset -f throw 2> /dev/null || true
-alias throw="__EXCEPTION_TYPE__=\${e:-Manually invoked} command_not_found_handle"
+alias throw="__EXCEPTION_TYPE__=\"\${e:-Manually invoked}\" command_not_found_handle"
 
 Exception::CustomCommandHandler() {
   ## this method can be overridden to create a custom, unknown command handler
@@ -52,7 +52,7 @@ command_not_found_handle() {
     undefinedObject="$type"
   fi
 
-  if [[ $__oo__insideTryCatch -gt 0 ]]
+  if [[ ${__oo__insideTryCatch-0} -gt 0 ]]
   then
     subject=level3 Log "inside Try No.: $__oo__insideTryCatch"
 
