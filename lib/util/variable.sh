@@ -115,7 +115,7 @@ Variable::ExportDeclarationAndTypeToVariables() {
   local primitiveType=${BASH_REMATCH[1]}
 
   local objectTypeIndirect="$variableName[__object_type]"
-  if [[ "$primitiveType" =~ [A] && ! -z "${!objectTypeIndirect}" ]]
+  if [[ "$primitiveType" =~ [A] && ! -z "${!objectTypeIndirect-}" ]]
   then
     DEBUG Log "Object Type $variableName[__object_type] = ${!objectTypeIndirect}"
     variableType="${!objectTypeIndirect}"
