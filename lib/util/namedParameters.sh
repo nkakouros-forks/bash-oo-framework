@@ -230,6 +230,9 @@ Variable::SetOpts() {
   opt="$(shopt -po functrace)" || :
   set +o functrace
   original_trap="$(trap -p DEBUG)"
+  if [[ "$original_trap" == '' ]]; then
+    original_trap='trap -- DEBUG'
+  fi
 }
 ## ARGUMENT RESOLVERS ##
 # NOTE: true; true; at the end is required to workaround an edge case where
