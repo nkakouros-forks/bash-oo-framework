@@ -230,11 +230,14 @@ Variable::SetOpts() {
   opt="$(shopt -po functrace)" || :
   set +o functrace
   original_trap="$(trap -p DEBUG)"
+  if [[ "$original_trap" == '' ]]; then
+    original_trap='trap -- DEBUG'
+  fi
 }
 ## ARGUMENT RESOLVERS ##
 # NOTE: true; true; at the end is required to workaround an edge case where
 # TRAP doesn't behave properly
-alias Variable::TrapAssign='Variable::InTrapCaptureParameters; local -i __assign_normalCodeStarted=0;trap "declare -i __assign_paramNo;Variable::TrapAssignNumberedParameter \"\$BASH_COMMAND\" \"\$@\"; [[ \$__assign_normalCodeStarted -ge 2 ]] && trap \$original_trap DEBUG && eval \"\$opt\" && eval \"\$original_trap\" && unset __assign_varType __assign_varName __assign_varValue __assign_paramNo __assign_valueRequired __assign_valueReadOnly __assign_valueGlobal __assign_valueExport __assign_noHandle" DEBUG; true; true;'
+alias Variable::TrapAssign='Variable::InTrapCaptureParameters; local -i __assign_normalCodeStarted=0;trap "declare -i __assign_paramNo;Variable::TrapAssignNumberedParameter \"\$BASH_COMMAND\" \"\$@\"; [[ \$__assign_normalCodeStarted -ge 2 ]] && eval \"\$opt\" && eval \"\$original_trap\" && unset __assign_varType __assign_varName __assign_varValue __assign_paramNo __assign_valueRequired __assign_valueReadOnly __assign_valueGlobal __assign_valueExport __assign_noHandle" DEBUG; true; true;'
 alias [reference]='_type=reference Variable::TrapAssign local -n'
 alias Variable::TrapAssignLocal='Variable::TrapAssign local ${__assign_parameters}'
 alias [string]="_type=string Variable::TrapAssignLocal"
