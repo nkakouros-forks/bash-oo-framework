@@ -1,0 +1,23 @@
+---
+
+language: bash
+
+os:
+  - linux
+
+services:
+  - docker
+
+env:
+  - BASH_VERSION=4
+  - BASH_VERSION=5
+
+before_script:
+  - git clone https://github.com/bats-core/bats-core.git vendor/bats-core
+  - git clone https://github.com/ztombol/bats-support vendor/bats-support
+  - git clone https://github.com/ztombol/bats-assert vendor/bats-assert
+
+script:
+  - docker pull bash:$BASH_VERSION
+  - docker run -it --volume="$PWD":/opt:ro bash:$BASH_VERSION ls /opt -al
+  - docker run -it --workdir=/opt --volume="$PWD":/opt:ro bash:$BASH_VERSION bin/run_tests

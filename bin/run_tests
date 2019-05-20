@@ -1,6 +1,5 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
-pwd
 if [[ ! -d vendor/bats-core ]]; then
   printf '%s\n' 'Installing dependencies'
   git clone https://github.com/bats-core/bats-core.git vendor/bats-core
